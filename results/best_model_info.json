@@ -1,0 +1,164 @@
+{
+  "created_at_utc": "2026-06-04T12:22:26.418610+00:00",
+  "best_model": "mlp",
+  "selection_metric": "frequent_class_cv_macro_f1",
+  "target": "bug type",
+  "species_used_as_target": false,
+  "train_feature_rows": 249,
+  "excluded_ids": [
+    154
+  ],
+  "cv_policy": {
+    "frequent_classes": [
+      "Bee",
+      "Bumblebee",
+      "Butterfly",
+      "Hover fly",
+      "Wasp"
+    ],
+    "excluded_from_cv_classes": [
+      "Dragonfly"
+    ],
+    "excluded_from_cv_sample_count": 1,
+    "cv_folds": 5,
+    "class_counts_all": {
+      "Bee": 115,
+      "Bumblebee": 100,
+      "Butterfly": 15,
+      "Dragonfly": 1,
+      "Hover fly": 9,
+      "Wasp": 9
+    },
+    "class_counts_cv": {
+      "Bee": 115,
+      "Bumblebee": 100,
+      "Butterfly": 15,
+      "Hover fly": 9,
+      "Wasp": 9
+    }
+  },
+  "best_validation_metrics": {
+    "model": "mlp",
+    "accuracy": 0.8709677419354839,
+    "macro_precision": 0.7734577698511577,
+    "macro_recall": 0.7414299516908213,
+    "macro_f1": 0.7553521749357212,
+    "weighted_f1": 0.8678926876971634,
+    "status": "ok",
+    "error": ""
+  },
+  "full_data_descriptive_training_metrics": {
+    "model": "mlp",
+    "accuracy": 1.0,
+    "macro_precision": 1.0,
+    "macro_recall": 1.0,
+    "macro_f1": 1.0,
+    "weighted_f1": 1.0
+  },
+  "model_path": "/Users/noir/A2/MachineLearning/MachineLearning_Project/models/best_model.joblib",
+  "known_bug_type_labels": [
+    "Bee",
+    "Bee & Bumblebee",
+    "Bumblebee",
+    "Butterfly",
+    "Dragonfly",
+    "Hover fly",
+    "Wasp"
+  ],
+  "confusion_matrix_figures": {
+    "dummy_most_frequent": "/Users/noir/A2/MachineLearning/MachineLearning_Project/reports/figures/confusion_matrix_dummy_most_frequent.png",
+    "logistic_regression": "/Users/noir/A2/MachineLearning/MachineLearning_Project/reports/figures/confusion_matrix_logistic_regression.png",
+    "svm_rbf": "/Users/noir/A2/MachineLearning/MachineLearning_Project/reports/figures/confusion_matrix_svm_rbf.png",
+    "knn": "/Users/noir/A2/MachineLearning/MachineLearning_Project/reports/figures/confusion_matrix_knn.png",
+    "random_forest": "/Users/noir/A2/MachineLearning/MachineLearning_Project/reports/figures/confusion_matrix_random_forest.png",
+    "extra_trees": "/Users/noir/A2/MachineLearning/MachineLearning_Project/reports/figures/confusion_matrix_extra_trees.png",
+    "gradient_boosting": "/Users/noir/A2/MachineLearning/MachineLearning_Project/reports/figures/confusion_matrix_gradient_boosting.png",
+    "mlp": "/Users/noir/A2/MachineLearning/MachineLearning_Project/reports/figures/confusion_matrix_mlp.png"
+  },
+  "feature_importance": {
+    "method": "permutation_importance_training_descriptive",
+    "figure": "/Users/noir/A2/MachineLearning/MachineLearning_Project/reports/figures/feature_importance.png",
+    "top_features": [
+      {
+        "feature": "hu_moment_6",
+        "importance": 0.17964279624261376
+      },
+      {
+        "feature": "hu_moment_5",
+        "importance": 0.17543859649122806
+      },
+      {
+        "feature": "lab_b_std",
+        "importance": 0.058230489487653414
+      },
+      {
+        "feature": "lab_a_std",
+        "importance": 0.02724861721494738
+      },
+      {
+        "feature": "hsv_h_std",
+        "importance": 0.02176766296478987
+      },
+      {
+        "feature": "hsv_s_std",
+        "importance": 0.019188844976152076
+      },
+      {
+        "feature": "shape_symmetry",
+        "importance": 0.014032225320387014
+      },
+      {
+        "feature": "component_count",
+        "importance": 0.012950742730140607
+      },
+      {
+        "feature": "hu_moment_1",
+        "importance": 0.01217557428082745
+      },
+      {
+        "feature": "hsv_h_median",
+        "importance": 0.009665468193374927
+      },
+      {
+        "feature": "bbox_area",
+        "importance": 0.009097048914493321
+      },
+      {
+        "feature": "edge_density",
+        "importance": 0.008678450878832743
+      },
+      {
+        "feature": "g_max",
+        "importance": 0.008160566406761261
+      },
+      {
+        "feature": "area",
+        "importance": 0.007199905829859477
+      },
+      {
+        "feature": "major_axis_length",
+        "importance": 0.007195825696331459
+      },
+      {
+        "feature": "bug_pixel_ratio",
+        "importance": 0.006886069764732316
+      },
+      {
+        "feature": "bbox_width",
+        "importance": 0.00663658646932348
+      },
+      {
+        "feature": "eccentricity",
+        "importance": 0.00452197324795609
+      },
+      {
+        "feature": "hsv_s_mean",
+        "importance": 0.004454022988505746
+      },
+      {
+        "feature": "hsv_h_mean",
+        "importance": 0.004454022988505746
+      }
+    ]
+  }
+}

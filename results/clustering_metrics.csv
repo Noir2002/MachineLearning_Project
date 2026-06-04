@@ -1,0 +1,4 @@
+method,cluster_count,noise_count,silhouette,adjusted_rand_index,normalized_mutual_information
+kmeans,6,0,0.11283403360271614,0.14892923323862936,0.2348654551863323
+agglomerative,6,0,0.07683862522853808,0.07575994931949719,0.18110773901675
+dbscan,0,249,,0.0,0.0

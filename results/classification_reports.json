@@ -1,0 +1,448 @@
+{
+  "target": "bug type",
+  "species_used_as_target": false,
+  "cv_policy": {
+    "frequent_classes": [
+      "Bee",
+      "Bumblebee",
+      "Butterfly",
+      "Hover fly",
+      "Wasp"
+    ],
+    "excluded_from_cv_classes": [
+      "Dragonfly"
+    ],
+    "excluded_from_cv_sample_count": 1,
+    "cv_folds": 5,
+    "class_counts_all": {
+      "Bee": 115,
+      "Bumblebee": 100,
+      "Butterfly": 15,
+      "Dragonfly": 1,
+      "Hover fly": 9,
+      "Wasp": 9
+    },
+    "class_counts_cv": {
+      "Bee": 115,
+      "Bumblebee": 100,
+      "Butterfly": 15,
+      "Hover fly": 9,
+      "Wasp": 9
+    }
+  },
+  "cv_reports": {
+    "dummy_most_frequent": {
+      "Bee": {
+        "precision": 0.4637096774193548,
+        "recall": 1.0,
+        "f1-score": 0.6336088154269972,
+        "support": 115.0
+      },
+      "Bumblebee": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 100.0
+      },
+      "Butterfly": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 15.0
+      },
+      "Hover fly": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 9.0
+      },
+      "Wasp": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 9.0
+      },
+      "accuracy": 0.4637096774193548,
+      "macro avg": {
+        "precision": 0.09274193548387097,
+        "recall": 0.2,
+        "f1-score": 0.12672176308539945,
+        "support": 248.0
+      },
+      "weighted avg": {
+        "precision": 0.2150266649323621,
+        "recall": 0.4637096774193548,
+        "f1-score": 0.2938105394117124,
+        "support": 248.0
+      }
+    },
+    "logistic_regression": {
+      "Bee": {
+        "precision": 0.9238095238095239,
+        "recall": 0.8434782608695652,
+        "f1-score": 0.8818181818181818,
+        "support": 115.0
+      },
+      "Bumblebee": {
+        "precision": 0.9019607843137255,
+        "recall": 0.92,
+        "f1-score": 0.9108910891089109,
+        "support": 100.0
+      },
+      "Butterfly": {
+        "precision": 0.75,
+        "recall": 0.8,
+        "f1-score": 0.7741935483870968,
+        "support": 15.0
+      },
+      "Hover fly": {
+        "precision": 0.25,
+        "recall": 0.3333333333333333,
+        "f1-score": 0.2857142857142857,
+        "support": 9.0
+      },
+      "Wasp": {
+        "precision": 0.5384615384615384,
+        "recall": 0.7777777777777778,
+        "f1-score": 0.6363636363636364,
+        "support": 9.0
+      },
+      "accuracy": 0.8508064516129032,
+      "macro avg": {
+        "precision": 0.6728463693169575,
+        "recall": 0.7349178743961352,
+        "f1-score": 0.6977961482784223,
+        "support": 248.0
+      },
+      "weighted avg": {
+        "precision": 0.8660497077242807,
+        "recall": 0.8508064516129032,
+        "f1-score": 0.856491146550362,
+        "support": 248.0
+      }
+    },
+    "svm_rbf": {
+      "Bee": {
+        "precision": 0.8487394957983193,
+        "recall": 0.8782608695652174,
+        "f1-score": 0.8632478632478633,
+        "support": 115.0
+      },
+      "Bumblebee": {
+        "precision": 0.9019607843137255,
+        "recall": 0.92,
+        "f1-score": 0.9108910891089109,
+        "support": 100.0
+      },
+      "Butterfly": {
+        "precision": 0.8461538461538461,
+        "recall": 0.7333333333333333,
+        "f1-score": 0.7857142857142857,
+        "support": 15.0
+      },
+      "Hover fly": {
+        "precision": 0.3333333333333333,
+        "recall": 0.2222222222222222,
+        "f1-score": 0.26666666666666666,
+        "support": 9.0
+      },
+      "Wasp": {
+        "precision": 1.0,
+        "recall": 0.8888888888888888,
+        "f1-score": 0.9411764705882353,
+        "support": 9.0
+      },
+      "accuracy": 0.8629032258064516,
+      "macro avg": {
+        "precision": 0.786037491919845,
+        "recall": 0.7285410628019324,
+        "f1-score": 0.7535392750651922,
+        "support": 248.0
+      },
+      "weighted avg": {
+        "precision": 0.8568283392761571,
+        "recall": 0.8629032258064516,
+        "f1-score": 0.8589472407475959,
+        "support": 248.0
+      }
+    },
+    "knn": {
+      "Bee": {
+        "precision": 0.7674418604651163,
+        "recall": 0.8608695652173913,
+        "f1-score": 0.8114754098360656,
+        "support": 115.0
+      },
+      "Bumblebee": {
+        "precision": 0.7870370370370371,
+        "recall": 0.85,
+        "f1-score": 0.8173076923076923,
+        "support": 100.0
+      },
+      "Butterfly": {
+        "precision": 1.0,
+        "recall": 0.4,
+        "f1-score": 0.5714285714285714,
+        "support": 15.0
+      },
+      "Hover fly": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 9.0
+      },
+      "Wasp": {
+        "precision": 1.0,
+        "recall": 0.5555555555555556,
+        "f1-score": 0.7142857142857143,
+        "support": 9.0
+      },
+      "accuracy": 0.7862903225806451,
+      "macro avg": {
+        "precision": 0.7108957795004307,
+        "recall": 0.5332850241545893,
+        "f1-score": 0.5828994775716086,
+        "support": 248.0
+      },
+      "weighted avg": {
+        "precision": 0.7699980550693228,
+        "recall": 0.7862903225806451,
+        "f1-score": 0.7663324248464386,
+        "support": 248.0
+      }
+    },
+    "random_forest": {
+      "Bee": {
+        "precision": 0.7835820895522388,
+        "recall": 0.9130434782608695,
+        "f1-score": 0.8433734939759037,
+        "support": 115.0
+      },
+      "Bumblebee": {
+        "precision": 0.8543689320388349,
+        "recall": 0.88,
+        "f1-score": 0.8669950738916257,
+        "support": 100.0
+      },
+      "Butterfly": {
+        "precision": 0.875,
+        "recall": 0.4666666666666667,
+        "f1-score": 0.6086956521739131,
+        "support": 15.0
+      },
+      "Hover fly": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 9.0
+      },
+      "Wasp": {
+        "precision": 1.0,
+        "recall": 0.3333333333333333,
+        "f1-score": 0.5,
+        "support": 9.0
+      },
+      "accuracy": 0.8185483870967742,
+      "macro avg": {
+        "precision": 0.7025902043182148,
+        "recall": 0.5186086956521739,
+        "f1-score": 0.5638128440082885,
+        "support": 248.0
+      },
+      "weighted avg": {
+        "precision": 0.7970719092838344,
+        "recall": 0.8185483870967742,
+        "f1-score": 0.7956366692701621,
+        "support": 248.0
+      }
+    },
+    "extra_trees": {
+      "Bee": {
+        "precision": 0.816793893129771,
+        "recall": 0.9304347826086956,
+        "f1-score": 0.8699186991869918,
+        "support": 115.0
+      },
+      "Bumblebee": {
+        "precision": 0.8737864077669902,
+        "recall": 0.9,
+        "f1-score": 0.8866995073891626,
+        "support": 100.0
+      },
+      "Butterfly": {
+        "precision": 0.9,
+        "recall": 0.6,
+        "f1-score": 0.72,
+        "support": 15.0
+      },
+      "Hover fly": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 9.0
+      },
+      "Wasp": {
+        "precision": 1.0,
+        "recall": 0.4444444444444444,
+        "f1-score": 0.6153846153846154,
+        "support": 9.0
+      },
+      "accuracy": 0.8467741935483871,
+      "macro avg": {
+        "precision": 0.7181160601793523,
+        "recall": 0.574975845410628,
+        "f1-score": 0.618400564392154,
+        "support": 248.0
+      },
+      "weighted avg": {
+        "precision": 0.8218142680912205,
+        "recall": 0.8467741935483871,
+        "f1-score": 0.8268107366285559,
+        "support": 248.0
+      }
+    },
+    "gradient_boosting": {
+      "Bee": {
+        "precision": 0.8145161290322581,
+        "recall": 0.8782608695652174,
+        "f1-score": 0.8451882845188284,
+        "support": 115.0
+      },
+      "Bumblebee": {
+        "precision": 0.8383838383838383,
+        "recall": 0.83,
+        "f1-score": 0.8341708542713567,
+        "support": 100.0
+      },
+      "Butterfly": {
+        "precision": 0.5625,
+        "recall": 0.6,
+        "f1-score": 0.5806451612903226,
+        "support": 15.0
+      },
+      "Hover fly": {
+        "precision": 0.25,
+        "recall": 0.1111111111111111,
+        "f1-score": 0.15384615384615385,
+        "support": 9.0
+      },
+      "Wasp": {
+        "precision": 0.8,
+        "recall": 0.4444444444444444,
+        "f1-score": 0.5714285714285714,
+        "support": 9.0
+      },
+      "accuracy": 0.7983870967741935,
+      "macro avg": {
+        "precision": 0.6530799934832192,
+        "recall": 0.5727632850241546,
+        "f1-score": 0.5970558050710466,
+        "support": 248.0
+      },
+      "weighted avg": {
+        "precision": 0.7878840269237641,
+        "recall": 0.7983870967741935,
+        "f1-score": 0.7897213229581787,
+        "support": 248.0
+      }
+    },
+    "mlp": {
+      "Bee": {
+        "precision": 0.8938053097345132,
+        "recall": 0.8782608695652174,
+        "f1-score": 0.8859649122807017,
+        "support": 115.0
+      },
+      "Bumblebee": {
+        "precision": 0.8867924528301887,
+        "recall": 0.94,
+        "f1-score": 0.912621359223301,
+        "support": 100.0
+      },
+      "Butterfly": {
+        "precision": 0.7692307692307693,
+        "recall": 0.6666666666666666,
+        "f1-score": 0.7142857142857143,
+        "support": 15.0
+      },
+      "Hover fly": {
+        "precision": 0.42857142857142855,
+        "recall": 0.3333333333333333,
+        "f1-score": 0.375,
+        "support": 9.0
+      },
+      "Wasp": {
+        "precision": 0.8888888888888888,
+        "recall": 0.8888888888888888,
+        "f1-score": 0.8888888888888888,
+        "support": 9.0
+      },
+      "accuracy": 0.8709677419354839,
+      "macro avg": {
+        "precision": 0.7734577698511577,
+        "recall": 0.7414299516908213,
+        "f1-score": 0.7553521749357212,
+        "support": 248.0
+      },
+      "weighted avg": {
+        "precision": 0.8663808882987594,
+        "recall": 0.8709677419354839,
+        "f1-score": 0.8678926876971634,
+        "support": 248.0
+      }
+    }
+  },
+  "full_data_descriptive_reports": {
+    "mlp": {
+      "Bee": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 115.0
+      },
+      "Bumblebee": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 100.0
+      },
+      "Butterfly": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 15.0
+      },
+      "Dragonfly": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 1.0
+      },
+      "Hover fly": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 9.0
+      },
+      "Wasp": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 9.0
+      },
+      "accuracy": 1.0,
+      "macro avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 249.0
+      },
+      "weighted avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 249.0
+      }
+    }
+  }
+}

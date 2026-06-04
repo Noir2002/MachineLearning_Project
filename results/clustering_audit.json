@@ -1,0 +1,9 @@
+{
+  "input_rows": 249,
+  "target_used_for_external_metrics": "bug type",
+  "species_used_as_target": false,
+  "figures": {
+    "kmeans": "/Users/noir/A2/MachineLearning/MachineLearning_Project/reports/figures/clustering_kmeans.png",
+    "agglomerative": "/Users/noir/A2/MachineLearning/MachineLearning_Project/reports/figures/clustering_agglomerative.png"
+  }
+}

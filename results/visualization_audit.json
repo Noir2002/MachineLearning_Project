@@ -1,0 +1,16 @@
+{
+  "created_at_utc": "2026-06-04T12:22:56.635694+00:00",
+  "input_rows": 249,
+  "target_for_projection_colors": "bug type",
+  "figures": {
+    "bug_type_distribution": "/Users/noir/A2/MachineLearning/MachineLearning_Project/reports/figures/bug_type_distribution.png",
+    "species_distribution": "/Users/noir/A2/MachineLearning/MachineLearning_Project/reports/figures/species_distribution.png",
+    "species_by_bug_type": "/Users/noir/A2/MachineLearning/MachineLearning_Project/reports/figures/species_by_bug_type.png",
+    "pca_2d": "/Users/noir/A2/MachineLearning/MachineLearning_Project/reports/figures/pca_2d.png",
+    "tsne_2d": "/Users/noir/A2/MachineLearning/MachineLearning_Project/reports/figures/tsne_2d.png",
+    "isomap_2d": "/Users/noir/A2/MachineLearning/MachineLearning_Project/reports/figures/isomap_2d.png"
+  },
+  "tsne_perplexity": 30,
+  "isomap_n_neighbors": 10,
+  "nonlinear_projection_method": "isomap"
+}

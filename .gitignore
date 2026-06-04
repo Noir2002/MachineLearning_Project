@@ -1,0 +1,27 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+.venv/
+venv/
+env/
+
+# Course-provided data. Keep local, do not commit.
+train/
+test/
+*.xlsx
+*.xls
+ML project.pdf
+
+# Locally generated feature tables and model binaries.
+data/processed/
+data/processed/*.csv
+data/processed/*.json
+models/*.joblib
+models/*.pkl
+
+# Final submission should only be generated after official test data is present.
+results/submission.csv
