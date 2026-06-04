@@ -57,8 +57,11 @@ def _markdown_report() -> str:
     comparison = pd.read_csv(config.MODEL_COMPARISON_CSV) if config.MODEL_COMPARISON_CSV.exists() else pd.DataFrame()
     clustering = pd.read_csv(config.CLUSTERING_METRICS_CSV) if config.CLUSTERING_METRICS_CSV.exists() else pd.DataFrame()
     train_rows = best_info.get("train_feature_rows", 249 if config.TRAIN_FEATURES_CSV.exists() else "not generated")
-    best_model = best_info.get("best_model", "not selected")
-    selected_metrics = best_info.get("best_validation_metrics", {})
+    numeric_best_model = best_info.get("numeric_best_model", best_info.get("best_model", "not selected"))
+    final_recommended_model = best_info.get("final_recommended_model", best_info.get("best_model", "not selected"))
+    numeric_metrics = best_info.get("numeric_best_validation_metrics", best_info.get("best_validation_metrics", {}))
+    final_metrics = best_info.get("final_recommended_validation_metrics", best_info.get("best_validation_metrics", {}))
+    tie_breaker = best_info.get("tie_breaker", {})
     full_metrics = best_info.get("full_data_descriptive_training_metrics", {})
     test_available = test_data_available()
 
@@ -118,7 +121,7 @@ def _markdown_report() -> str:
         "",
         "## 6. Supervised models",
         "",
-        "The supervised target is `bug type`; `species` is not used as a target. Model comparison uses frequent-class stratified cross-validation because singleton classes make ordinary stratified 5-fold CV invalid for the full label set. The final selected supervised model is refit on all 249 usable samples, including rare classes.",
+        "The supervised target is `bug type`; `species` is not used as a target. Model comparison uses frequent-class stratified cross-validation because singleton classes make ordinary stratified 5-fold CV invalid for the full label set. The final recommended supervised model is refit on all 249 usable samples, including rare classes.",
         "",
         "Models evaluated: DummyClassifier, LogisticRegression, SVM RBF, KNeighborsClassifier, RandomForestClassifier, ExtraTreesClassifier, GradientBoostingClassifier, and MLPClassifier on extracted features.",
         "",
@@ -126,9 +129,15 @@ def _markdown_report() -> str:
         "",
         _top_model_table(comparison),
         "",
-        f"Selected model: `{best_model}`.",
+        f"Numerically highest CV macro-F1 model: `{numeric_best_model}`.",
         "",
-        f"Selected validation macro-F1: `{selected_metrics.get('macro_f1', 'not available')}`.",
+        f"Numeric best validation macro-F1: `{numeric_metrics.get('macro_f1', 'not available')}`.",
+        "",
+        f"Final recommended submission model: `{final_recommended_model}`.",
+        "",
+        f"Final recommended validation macro-F1: `{final_metrics.get('macro_f1', 'not available')}`.",
+        "",
+        f"Robustness tie-breaker: {tie_breaker.get('reason', 'not applied')}",
         "",
         "Full-data training metrics are descriptive only, not validation metrics.",
         "",
@@ -142,7 +151,7 @@ def _markdown_report() -> str:
         "",
         "## 8. Results",
         "",
-        "The selected model is chosen by frequent-class cross-validation macro-F1. Confusion matrices and feature importance plots are generated under `reports/figures/`.",
+        "The metric table remains unchanged: MLP has the numerically highest frequent-class CV macro-F1. Because SVM RBF is within 0.005 macro-F1 of MLP and is simpler/stabler on small imbalanced handcrafted-feature data, SVM RBF is the final recommended submission model. Confusion matrices and feature importance plots are generated under `reports/figures/`.",
         "",
         f"- Feature importance: `{_figure(config.FIGURES_DIR / 'feature_importance.png')}`",
         "",
@@ -158,7 +167,7 @@ def _markdown_report() -> str:
         "",
         "## 10. Limitations",
         "",
-        "The dataset is small and imbalanced, with very rare classes. Cross-validation excludes singleton classes for model comparison, so rare-class performance is documented mainly through the final full-data descriptive fit. The final model remains feature-based and depends on segmentation mask quality.",
+        "The dataset is small and imbalanced, with very rare classes. Cross-validation excludes singleton classes for model comparison, so rare-class performance is documented mainly through the final full-data descriptive fit. The final recommended model remains feature-based and depends on segmentation mask quality.",
         "",
         "## 11. Reproducibility",
         "",
@@ -290,7 +299,7 @@ def write_pdf_report() -> Path:
     story.append(
         Paragraph(
             "Model comparison uses frequent-class stratified cross-validation because singleton classes make full-label stratified CV invalid. "
-            "The selected model is refit on all 249 usable samples.",
+            "The final recommended model is refit on all 249 usable samples.",
             styles["BodyText"],
         )
     )
@@ -298,8 +307,11 @@ def write_pdf_report() -> Path:
     story.append(Spacer(1, 0.1 * inch))
     story.append(
         Paragraph(
-            f"Selected model: {best_info.get('best_model', 'not selected')}. "
-            f"Validation macro-F1: {best_info.get('best_validation_metrics', {}).get('macro_f1', 'not available')}.",
+            f"Numerically highest CV macro-F1 model: {best_info.get('numeric_best_model', best_info.get('best_model', 'not selected'))} "
+            f"({best_info.get('numeric_best_validation_metrics', best_info.get('best_validation_metrics', {})).get('macro_f1', 'not available')}). "
+            f"Final recommended submission model: {best_info.get('final_recommended_model', best_info.get('best_model', 'not selected'))} "
+            f"({best_info.get('final_recommended_validation_metrics', best_info.get('best_validation_metrics', {})).get('macro_f1', 'not available')}). "
+            f"{best_info.get('tie_breaker', {}).get('reason', '')}",
             styles["BodyText"],
         )
     )
@@ -359,4 +371,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

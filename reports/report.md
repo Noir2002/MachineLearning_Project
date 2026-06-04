@@ -47,7 +47,7 @@ Generated figures:
 
 ## 6. Supervised models
 
-The supervised target is `bug type`; `species` is not used as a target. Model comparison uses frequent-class stratified cross-validation because singleton classes make ordinary stratified 5-fold CV invalid for the full label set. The final selected supervised model is refit on all 249 usable samples, including rare classes.
+The supervised target is `bug type`; `species` is not used as a target. Model comparison uses frequent-class stratified cross-validation because singleton classes make ordinary stratified 5-fold CV invalid for the full label set. The final recommended supervised model is refit on all 249 usable samples, including rare classes.
 
 Models evaluated: DummyClassifier, LogisticRegression, SVM RBF, KNeighborsClassifier, RandomForestClassifier, ExtraTreesClassifier, GradientBoostingClassifier, and MLPClassifier on extracted features.
 
@@ -64,13 +64,19 @@ Model comparison:
 | random_forest       |   0.818548 |   0.563813 |      0.795637 | ok       |
 | dummy_most_frequent |   0.46371  |   0.126722 |      0.293811 | ok       |
 
-Selected model: `mlp`.
+Numerically highest CV macro-F1 model: `mlp`.
 
-Selected validation macro-F1: `0.7553521749357212`.
+Numeric best validation macro-F1: `0.7553521749357212`.
+
+Final recommended submission model: `svm_rbf`.
+
+Final recommended validation macro-F1: `0.7535392750651922`.
+
+Robustness tie-breaker: SVM RBF selected by robustness tie-breaker because its macro-F1 is within 0.005 of MLP and it is simpler/stabler for small imbalanced data.
 
 Full-data training metrics are descriptive only, not validation metrics.
 
-Descriptive full-data macro-F1: `1.0`.
+Descriptive full-data macro-F1: `0.9953290316974082`.
 
 ## 7. Clustering methods
 
@@ -84,7 +90,7 @@ KMeans, AgglomerativeClustering, and DBSCAN are run on imputed and standardized 
 
 ## 8. Results
 
-The selected model is chosen by frequent-class cross-validation macro-F1. Confusion matrices and feature importance plots are generated under `reports/figures/`.
+The metric table remains unchanged: MLP has the numerically highest frequent-class CV macro-F1. Because SVM RBF is within 0.005 macro-F1 of MLP and is simpler/stabler on small imbalanced handcrafted-feature data, SVM RBF is the final recommended submission model. Confusion matrices and feature importance plots are generated under `reports/figures/`.
 
 - Feature importance: `reports/figures/feature_importance.png`
 
@@ -96,7 +102,7 @@ When official test images and masks are available, `src.predict` will load `data
 
 ## 10. Limitations
 
-The dataset is small and imbalanced, with very rare classes. Cross-validation excludes singleton classes for model comparison, so rare-class performance is documented mainly through the final full-data descriptive fit. The final model remains feature-based and depends on segmentation mask quality.
+The dataset is small and imbalanced, with very rare classes. Cross-validation excludes singleton classes for model comparison, so rare-class performance is documented mainly through the final full-data descriptive fit. The final recommended model remains feature-based and depends on segmentation mask quality.
 
 ## 11. Reproducibility
 

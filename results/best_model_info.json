@@ -1,7 +1,27 @@
 {
-  "created_at_utc": "2026-06-04T12:22:26.418610+00:00",
-  "best_model": "mlp",
+  "created_at_utc": "2026-06-04T12:36:50.342214+00:00",
+  "numeric_best_model": "mlp",
+  "final_recommended_model": "svm_rbf",
+  "best_model": "svm_rbf",
   "selection_metric": "frequent_class_cv_macro_f1",
+  "final_selection_policy": "robustness_tie_breaker_threshold_0.005",
+  "tie_breaker": {
+    "threshold": 0.005,
+    "priority_order": [
+      "svm_rbf",
+      "random_forest",
+      "extra_trees",
+      "logistic_regression",
+      "knn",
+      "mlp"
+    ],
+    "models_within_threshold": [
+      "mlp",
+      "svm_rbf"
+    ],
+    "applied": true,
+    "reason": "SVM RBF selected by robustness tie-breaker because its macro-F1 is within 0.005 of MLP and it is simpler/stabler for small imbalanced data."
+  },
   "target": "bug type",
   "species_used_as_target": false,
   "train_feature_rows": 249,
@@ -37,7 +57,7 @@
       "Wasp": 9
     }
   },
-  "best_validation_metrics": {
+  "numeric_best_validation_metrics": {
     "model": "mlp",
     "accuracy": 0.8709677419354839,
     "macro_precision": 0.7734577698511577,
@@ -47,13 +67,33 @@
     "status": "ok",
     "error": ""
   },
+  "final_recommended_validation_metrics": {
+    "model": "svm_rbf",
+    "accuracy": 0.8629032258064516,
+    "macro_precision": 0.786037491919845,
+    "macro_recall": 0.7285410628019324,
+    "macro_f1": 0.7535392750651922,
+    "weighted_f1": 0.8589472407475959,
+    "status": "ok",
+    "error": ""
+  },
+  "best_validation_metrics": {
+    "model": "svm_rbf",
+    "accuracy": 0.8629032258064516,
+    "macro_precision": 0.786037491919845,
+    "macro_recall": 0.7285410628019324,
+    "macro_f1": 0.7535392750651922,
+    "weighted_f1": 0.8589472407475959,
+    "status": "ok",
+    "error": ""
+  },
   "full_data_descriptive_training_metrics": {
-    "model": "mlp",
-    "accuracy": 1.0,
-    "macro_precision": 1.0,
-    "macro_recall": 1.0,
-    "macro_f1": 1.0,
-    "weighted_f1": 1.0
+    "model": "svm_rbf",
+    "accuracy": 0.9879518072289156,
+    "macro_precision": 0.995237681662903,
+    "macro_recall": 0.9954347826086956,
+    "macro_f1": 0.9953290316974082,
+    "weighted_f1": 0.9879554717599459
   },
   "model_path": "/Users/noir/A2/MachineLearning/MachineLearning_Project/models/best_model.joblib",
   "known_bug_type_labels": [
@@ -80,84 +120,84 @@
     "figure": "/Users/noir/A2/MachineLearning/MachineLearning_Project/reports/figures/feature_importance.png",
     "top_features": [
       {
-        "feature": "hu_moment_6",
-        "importance": 0.17964279624261376
+        "feature": "hu_moment_3",
+        "importance": 0.1778239038279833
+      },
+      {
+        "feature": "hu_moment_4",
+        "importance": 0.1778239038279833
       },
       {
         "feature": "hu_moment_5",
-        "importance": 0.17543859649122806
+        "importance": 0.1778239038279833
       },
       {
-        "feature": "lab_b_std",
-        "importance": 0.058230489487653414
+        "feature": "hu_moment_6",
+        "importance": 0.1778239038279833
       },
       {
-        "feature": "lab_a_std",
-        "importance": 0.02724861721494738
-      },
-      {
-        "feature": "hsv_h_std",
-        "importance": 0.02176766296478987
-      },
-      {
-        "feature": "hsv_s_std",
-        "importance": 0.019188844976152076
-      },
-      {
-        "feature": "shape_symmetry",
-        "importance": 0.014032225320387014
-      },
-      {
-        "feature": "component_count",
-        "importance": 0.012950742730140607
+        "feature": "hu_moment_7",
+        "importance": 0.1778239038279833
       },
       {
         "feature": "hu_moment_1",
-        "importance": 0.01217557428082745
+        "importance": 0.17687500615048474
       },
       {
-        "feature": "hsv_h_median",
-        "importance": 0.009665468193374927
+        "feature": "hu_moment_2",
+        "importance": 0.17204301075268813
       },
       {
-        "feature": "bbox_area",
-        "importance": 0.009097048914493321
+        "feature": "lab_b_std",
+        "importance": 0.04882493055588042
       },
       {
-        "feature": "edge_density",
-        "importance": 0.008678450878832743
+        "feature": "lab_a_std",
+        "importance": 0.00589732458268426
       },
       {
-        "feature": "g_max",
-        "importance": 0.008160566406761261
-      },
-      {
-        "feature": "area",
-        "importance": 0.007199905829859477
-      },
-      {
-        "feature": "major_axis_length",
-        "importance": 0.007195825696331459
-      },
-      {
-        "feature": "bug_pixel_ratio",
-        "importance": 0.006886069764732316
-      },
-      {
-        "feature": "bbox_width",
-        "importance": 0.00663658646932348
+        "feature": "shape_symmetry",
+        "importance": 0.0057978333323258635
       },
       {
         "feature": "eccentricity",
-        "importance": 0.00452197324795609
+        "importance": 0.004006313299787867
+      },
+      {
+        "feature": "component_count",
+        "importance": 0.0031107614489572777
+      },
+      {
+        "feature": "lab_b_mean",
+        "importance": 0.002729398873293398
       },
       {
         "feature": "hsv_s_mean",
-        "importance": 0.004454022988505746
+        "importance": 0.002103813235945595
       },
       {
-        "feature": "hsv_h_mean",
-        "importance": 0.004454022988505746
+        "feature": "lab_a_mean",
+        "importance": 0.002103813235945595
+      },
+      {
+        "feature": "edge_density",
+        "importance": 0.0009321266148773155
+      },
+      {
+        "feature": "hsv_s_std",
+        "importance": 0.000622850818795584
+      },
+      {
+        "feature": "aspect_ratio",
+        "importance": 0.00031066766771974396
+      },
+      {
+        "feature": "g_min",
+        "importance": 0.00031066766771974396
+      },
+      {
+        "feature": "g_max",
+        "importance": 0.00031066766771974396
       }
     ]
   }

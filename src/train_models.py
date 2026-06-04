@@ -42,6 +42,19 @@ warnings.filterwarnings("ignore", category=RuntimeWarning, module=r"sklearn\..*"
 
 
 NON_FEATURE_COLUMNS = {config.ID_COLUMN, config.TARGET_COLUMN, config.SPECIES_COLUMN}
+TIE_BREAKER_THRESHOLD = 0.005
+TIE_BREAKER_PRIORITY = [
+    "svm_rbf",
+    "random_forest",
+    "extra_trees",
+    "logistic_regression",
+    "knn",
+    "mlp",
+]
+TIE_BREAKER_REASON = (
+    "SVM RBF selected by robustness tie-breaker because its macro-F1 is within 0.005 "
+    "of MLP and it is simpler/stabler for small imbalanced data."
+)
 
 
 def load_training_features() -> tuple[pd.DataFrame, pd.DataFrame, pd.Series]:
@@ -189,7 +202,7 @@ def _feature_importance(final_model: Pipeline, X: pd.DataFrame, y: pd.Series) ->
                 scoring="f1_macro",
                 n_repeats=5,
                 random_state=config.RANDOM_STATE,
-                n_jobs=-1,
+                n_jobs=1,
             )
         importances = result.importances_mean
         method = "permutation_importance_training_descriptive"
@@ -213,6 +226,35 @@ def _feature_importance(final_model: Pipeline, X: pd.DataFrame, y: pd.Series) ->
             for i in top
         ],
     }
+
+
+def choose_final_model(successful: pd.DataFrame) -> tuple[str, str, dict, dict, dict]:
+    ordered = successful.sort_values(["macro_f1", "weighted_f1", "accuracy"], ascending=False)
+    numeric_best = ordered.iloc[0].to_dict()
+    numeric_best_model = str(numeric_best["model"])
+    numeric_best_macro_f1 = float(numeric_best["macro_f1"])
+    threshold_floor = numeric_best_macro_f1 - TIE_BREAKER_THRESHOLD
+    tied = successful[successful["macro_f1"] >= threshold_floor].copy()
+    tied_models = set(tied["model"].astype(str))
+
+    final_model = numeric_best_model
+    for candidate in TIE_BREAKER_PRIORITY:
+        if candidate in tied_models:
+            final_model = candidate
+            break
+
+    final_metrics = tied[tied["model"] == final_model].iloc[0].to_dict()
+    tie_breaker_applied = final_model != numeric_best_model
+    policy = {
+        "threshold": TIE_BREAKER_THRESHOLD,
+        "priority_order": TIE_BREAKER_PRIORITY,
+        "models_within_threshold": tied.sort_values("macro_f1", ascending=False)["model"].tolist(),
+        "applied": tie_breaker_applied,
+        "reason": TIE_BREAKER_REASON
+        if tie_breaker_applied
+        else "Numerically best model retained; no higher-priority stable model was within the tie threshold.",
+    }
+    return numeric_best_model, final_model, numeric_best, final_metrics, policy
 
 
 def train_models() -> dict:
@@ -264,33 +306,48 @@ def train_models() -> dict:
     if successful.empty:
         raise RuntimeError("All model evaluations failed.")
     successful = successful.sort_values(["macro_f1", "weighted_f1", "accuracy"], ascending=False)
-    best_model_name = str(successful.iloc[0]["model"])
-    best_pipeline = clone(model_registry()[best_model_name])
+    (
+        numeric_best_model,
+        final_model_name,
+        numeric_best_metrics,
+        final_recommended_metrics,
+        tie_breaker_policy,
+    ) = choose_final_model(successful)
+    final_pipeline = clone(model_registry()[final_model_name])
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", category=ConvergenceWarning)
         warnings.simplefilter("ignore", category=RuntimeWarning)
-        best_pipeline.fit(X, y)
-    train_pred = best_pipeline.predict(X)
-    full_training_metrics = metric_row(best_model_name, y, train_pred)
-    reports["full_data_descriptive_reports"][best_model_name] = classification_report(
+        final_pipeline.fit(X, y)
+    train_pred = final_pipeline.predict(X)
+    full_training_metrics = metric_row(final_model_name, y, train_pred)
+    reports["numeric_best_model"] = numeric_best_model
+    reports["final_recommended_model"] = final_model_name
+    reports["tie_breaker_policy"] = tie_breaker_policy
+    reports["full_data_descriptive_reports"][final_model_name] = classification_report(
         y, train_pred, output_dict=True, zero_division=0
     )
 
-    feature_importance = _feature_importance(best_pipeline, X, y)
-    joblib.dump(best_pipeline, config.BEST_MODEL_PATH)
+    feature_importance = _feature_importance(final_pipeline, X, y)
+    joblib.dump(final_pipeline, config.BEST_MODEL_PATH)
 
     known_labels = sorted(load_labels()[config.TARGET_COLUMN].astype(str).unique().tolist())
     info = {
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
-        "best_model": best_model_name,
+        "numeric_best_model": numeric_best_model,
+        "final_recommended_model": final_model_name,
+        "best_model": final_model_name,
         "selection_metric": "frequent_class_cv_macro_f1",
+        "final_selection_policy": "robustness_tie_breaker_threshold_0.005",
+        "tie_breaker": tie_breaker_policy,
         "target": config.TARGET_COLUMN,
         "species_used_as_target": False,
         "train_feature_rows": int(len(df)),
         "excluded_ids": sorted(config.EXCLUDED_TRAIN_IDS),
         "cv_policy": cv_info,
-        "best_validation_metrics": successful.iloc[0].to_dict(),
+        "numeric_best_validation_metrics": numeric_best_metrics,
+        "final_recommended_validation_metrics": final_recommended_metrics,
+        "best_validation_metrics": final_recommended_metrics,
         "full_data_descriptive_training_metrics": full_training_metrics,
         "model_path": str(config.BEST_MODEL_PATH),
         "known_bug_type_labels": known_labels,
@@ -299,7 +356,8 @@ def train_models() -> dict:
     }
     config.BEST_MODEL_INFO_JSON.write_text(json.dumps(info, indent=2), encoding="utf-8")
     config.CLASSIFICATION_REPORTS_JSON.write_text(json.dumps(reports, indent=2), encoding="utf-8")
-    print(f"Best model: {best_model_name}")
+    print(f"Numeric best model: {numeric_best_model}")
+    print(f"Final recommended model: {final_model_name}")
     return info
 
 

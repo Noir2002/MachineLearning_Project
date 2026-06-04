@@ -81,6 +81,10 @@ Important generated outputs:
 - `reports/report.md`
 - `reports/report.pdf`
 
+## Final Model Selection Policy
+
+Model comparison keeps the raw validation metric table unchanged. If the numerically best model and a simpler/stabler model have frequent-class CV macro-F1 values within `0.005`, the final recommendation uses this robustness priority: SVM RBF, RandomForest, ExtraTrees, LogisticRegression, KNN, then MLP. This policy is recorded in `results/best_model_info.json`.
+
 ## Contributions
 
 - Lianghong LI: project lead; implemented feature extraction, model training, validation, final prediction pipeline, and report integration.

@@ -393,17 +393,17 @@
     }
   },
   "full_data_descriptive_reports": {
-    "mlp": {
+    "svm_rbf": {
       "Bee": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
+        "precision": 0.9912280701754386,
+        "recall": 0.9826086956521739,
+        "f1-score": 0.9868995633187773,
         "support": 115.0
       },
       "Bumblebee": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
+        "precision": 0.9801980198019802,
+        "recall": 0.99,
+        "f1-score": 0.9850746268656716,
         "support": 100.0
       },
       "Butterfly": {
@@ -430,19 +430,38 @@
         "f1-score": 1.0,
         "support": 9.0
       },
-      "accuracy": 1.0,
+      "accuracy": 0.9879518072289156,
       "macro avg": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
+        "precision": 0.995237681662903,
+        "recall": 0.9954347826086956,
+        "f1-score": 0.9953290316974082,
         "support": 249.0
       },
       "weighted avg": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
+        "precision": 0.9879961046199737,
+        "recall": 0.9879518072289156,
+        "f1-score": 0.9879554717599459,
         "support": 249.0
       }
     }
+  },
+  "numeric_best_model": "mlp",
+  "final_recommended_model": "svm_rbf",
+  "tie_breaker_policy": {
+    "threshold": 0.005,
+    "priority_order": [
+      "svm_rbf",
+      "random_forest",
+      "extra_trees",
+      "logistic_regression",
+      "knn",
+      "mlp"
+    ],
+    "models_within_threshold": [
+      "mlp",
+      "svm_rbf"
+    ],
+    "applied": true,
+    "reason": "SVM RBF selected by robustness tie-breaker because its macro-F1 is within 0.005 of MLP and it is simpler/stabler for small imbalanced data."
   }
 }
