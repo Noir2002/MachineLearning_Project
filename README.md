@@ -47,6 +47,8 @@ python -m src.visualize
 python -m src.make_report
 ```
 
+If the shell does not provide a `python` executable, use `python3` for the same commands. The scripts in `scripts/` detect this automatically.
+
 Generated local training features are written to `data/processed/train_features.csv`, but this file is derived from the course dataset and should not be committed.
 
 ## Final Submission Pipeline
@@ -84,4 +86,3 @@ Important generated outputs:
 - Lianghong LI: project lead; implemented feature extraction, model training, validation, final prediction pipeline, and report integration.
 - Zekai YAN: support contribution for data checking, visualization review, and report proofreading.
 - Muzi LI: support contribution for reproducibility checking, documentation review, and result verification.
-
