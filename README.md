@@ -2,7 +2,7 @@
 
 Team:
 - Lianghong LI
-- Zekai YAN
+- Zhekai YAN
 - Muzi LI
 
 This repository implements the required main pipeline using handcrafted features extracted from insect images and segmentation masks. The supervised target is `bug type`. The `species` column is used for visualization and reporting context only, not as the supervised learning target.
@@ -92,5 +92,5 @@ Model comparison keeps the raw validation metric table unchanged. If the numeric
 ## Contributions
 
 - Lianghong LI: project lead; implemented feature extraction, model training, validation, final prediction pipeline, and report integration.
-- Zekai YAN: support contribution for data checking, visualization review, and report proofreading.
+- Zhekai YAN: support contribution for data checking, visualization review, and report proofreading.
 - Muzi LI: support contribution for reproducibility checking, documentation review, and result verification.
