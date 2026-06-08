@@ -120,11 +120,19 @@ The metric table remains unchanged: MLP has the numerically highest frequent-cla
 
 ## 9. Final prediction pipeline for 251-347
 
-The final submission generation pipeline has been implemented, but the official CSV for images 251-347 will be generated after the test images and masks are released.
+The official test images and masks for IDs 251-347 were released and processed.
 
-When official test images and masks are available, `src.predict` will load `data/processed/test_features.csv`, apply the saved final model, and write `results/submission.csv` with exactly `ID,bug type` columns.
+The final `svm_rbf` model was applied to the 97 test samples using the same handcrafted feature schema as the training data.
 
-No fake submission CSV was generated.
+`results/submission.csv` was generated with exactly two columns: `ID` and `bug type`.
+
+The CSV was validated for 97 rows, IDs exactly 251-347, no duplicate IDs, no missing predictions, and labels belonging to known training bug type labels.
+
+Prediction distribution by bug type: `{'Bee': 46, 'Bumblebee': 38, 'Butterfly': 6, 'Wasp': 5, 'Hover fly': 2}`.
+
+No test accuracy is reported because the official test labels are unavailable.
+
+No predictions were manually edited or fabricated.
 
 ## 10. Limitations
 
@@ -141,10 +149,14 @@ python3 -m src.train_models
 python3 -m src.clustering
 python3 -m src.visualize
 python3 -m src.make_report
+python3 -m src.data_loader --validate --split test
+python3 -m src.build_features --split test
+python3 -m src.predict
+python3 -m src.validate_submission results/submission.csv
 ```
 
-Do not run the final submission pipeline until official test images and masks for IDs 251-347 are present.
+The final submission commands use the already selected supervised model and do not use test data for model selection or hyperparameter tuning.
 
 ## Audit Notes
 
-Data audit file: `results/data_audit.json`; latest audit keys: `['train', 'latest_split', 'id_154_policy', 'excluded_train_ids']`.
+Data audit file: `results/data_audit.json`; latest audit keys: `['train', 'latest_split', 'id_154_policy', 'excluded_train_ids', 'test']`.

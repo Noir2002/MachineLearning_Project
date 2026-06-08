@@ -21,7 +21,7 @@ train/
 
 The segmentation mask for ID `154` is officially unavailable. The project does not fabricate, estimate, manually draw, or impute that mask. ID `154` is excluded from mask-based feature extraction, so the effective labeled training set contains `249` usable samples.
 
-The expected future test layout is:
+The official test data layout is:
 
 ```text
 test/
@@ -30,7 +30,7 @@ test/
     binary_251.tif ... binary_347.tif
 ```
 
-The final submission CSV is intentionally not generated until those official test images and masks are available.
+The official test images and masks for IDs `251`-`347` have been processed. The final CSV is generated at `results/submission.csv` and copied to `deliverables/submission.csv` for submission.
 
 ## Reproducible Training Pipeline
 
@@ -53,7 +53,7 @@ Generated local training features are written to `data/processed/train_features.
 
 ## Final Submission Pipeline
 
-Run this only after official test files for IDs `251`-`347` are available:
+Run this after the final training pipeline has produced the selected supervised model:
 
 ```bash
 python -m src.data_loader --validate --split test
@@ -67,6 +67,10 @@ The final CSV must contain exactly two columns:
 ```csv
 ID,bug type
 ```
+
+The committed deliverables folder contains:
+- `deliverables/report.pdf`
+- `deliverables/submission.csv`
 
 ## Outputs
 

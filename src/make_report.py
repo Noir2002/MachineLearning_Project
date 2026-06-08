@@ -23,6 +23,7 @@ from reportlab.platypus import (
 
 from . import config
 from .data_loader import ensure_output_dirs, test_data_available
+from .validate_submission import validate_submission_file
 
 PENDING_SUBMISSION_SENTENCE = (
     "The final submission generation pipeline has been implemented, but the official CSV for images "
@@ -75,6 +76,78 @@ def _load_train_features() -> pd.DataFrame:
     return pd.read_csv(config.TRAIN_FEATURES_CSV)
 
 
+def _submission_summary() -> dict:
+    if not config.SUBMISSION_CSV.exists():
+        return {
+            "exists": False,
+            "valid": False,
+            "row_count": 0,
+            "distribution": {},
+            "error": "results/submission.csv has not been generated.",
+        }
+    try:
+        validate_submission_file(config.SUBMISSION_CSV)
+        valid = True
+        error = ""
+    except Exception as exc:
+        valid = False
+        error = str(exc)
+    df = pd.read_csv(config.SUBMISSION_CSV)
+    distribution = (
+        df[config.TARGET_COLUMN].value_counts().to_dict()
+        if config.TARGET_COLUMN in df.columns
+        else {}
+    )
+    ids = df[config.ID_COLUMN].astype(int).tolist() if config.ID_COLUMN in df.columns else []
+    return {
+        "exists": True,
+        "valid": valid,
+        "row_count": int(len(df)),
+        "columns": list(df.columns),
+        "ids_exact": ids == list(config.TEST_IDS),
+        "duplicate_ids": bool(df[config.ID_COLUMN].duplicated().any()) if config.ID_COLUMN in df.columns else None,
+        "missing_predictions": bool(df[config.TARGET_COLUMN].isna().any()) if config.TARGET_COLUMN in df.columns else None,
+        "distribution": distribution,
+        "error": error,
+    }
+
+
+def _final_prediction_markdown(
+    test_available: bool,
+    submission_summary: dict,
+    final_recommended_model: str,
+) -> list[str]:
+    if test_available and submission_summary.get("valid"):
+        return [
+            "The official test images and masks for IDs 251-347 were released and processed.",
+            "",
+            f"The final `{final_recommended_model}` model was applied to the 97 test samples using the same handcrafted feature schema as the training data.",
+            "",
+            "`results/submission.csv` was generated with exactly two columns: `ID` and `bug type`.",
+            "",
+            "The CSV was validated for 97 rows, IDs exactly 251-347, no duplicate IDs, no missing predictions, and labels belonging to known training bug type labels.",
+            "",
+            f"Prediction distribution by bug type: `{submission_summary.get('distribution', {})}`.",
+            "",
+            "No test accuracy is reported because the official test labels are unavailable.",
+            "",
+            "No predictions were manually edited or fabricated.",
+        ]
+    if test_available:
+        return [
+            "The official test images and masks for IDs 251-347 are available, but the final submission CSV has not passed validation yet.",
+            "",
+            f"Submission status: `{submission_summary.get('error', 'not generated')}`.",
+        ]
+    return [
+        PENDING_SUBMISSION_SENTENCE,
+        "",
+        "When official test images and masks are available, `src.predict` will load `data/processed/test_features.csv`, apply the saved final model, and write `results/submission.csv` with exactly `ID,bug type` columns.",
+        "",
+        "No fake submission CSV was generated.",
+    ]
+
+
 def _markdown_report() -> str:
     audit = _load_json(config.DATA_AUDIT_JSON)
     best_info = _load_json(config.BEST_MODEL_INFO_JSON)
@@ -91,6 +164,7 @@ def _markdown_report() -> str:
     tie_breaker = best_info.get("tie_breaker", {})
     full_metrics = best_info.get("full_data_descriptive_training_metrics", {})
     test_available = test_data_available()
+    submission_summary = _submission_summary()
     bug_counts = (
         train_features[config.TARGET_COLUMN].value_counts().to_dict()
         if not train_features.empty and config.TARGET_COLUMN in train_features.columns
@@ -221,15 +295,7 @@ def _markdown_report() -> str:
         "",
         "## 9. Final prediction pipeline for 251-347",
         "",
-        (
-            "Official test data is available, so the final submission pipeline can be run."
-            if test_available
-            else PENDING_SUBMISSION_SENTENCE
-        ),
-        "",
-        "When official test images and masks are available, `src.predict` will load `data/processed/test_features.csv`, apply the saved final model, and write `results/submission.csv` with exactly `ID,bug type` columns.",
-        "",
-        "No fake submission CSV was generated.",
+        *_final_prediction_markdown(test_available, submission_summary, final_recommended_model),
         "",
         "## 10. Limitations",
         "",
@@ -246,9 +312,13 @@ def _markdown_report() -> str:
         "python3 -m src.clustering",
         "python3 -m src.visualize",
         "python3 -m src.make_report",
+        "python3 -m src.data_loader --validate --split test",
+        "python3 -m src.build_features --split test",
+        "python3 -m src.predict",
+        "python3 -m src.validate_submission results/submission.csv",
         "```",
         "",
-        "Do not run the final submission pipeline until official test images and masks for IDs 251-347 are present.",
+        "The final submission commands use the already selected supervised model and do not use test data for model selection or hyperparameter tuning.",
         "",
         "## Audit Notes",
         "",
@@ -341,6 +411,9 @@ def write_pdf_report() -> Path:
     )
     largest_bug_type = max(bug_counts, key=bug_counts.get) if bug_counts else "not available"
     largest_species = max(species_counts, key=species_counts.get) if species_counts else "not available"
+    submission_summary = _submission_summary()
+    test_available = test_data_available()
+    final_recommended_model = best_info.get("final_recommended_model", best_info.get("best_model", "not selected"))
 
     path = config.REPORTS_DIR / "report.pdf"
     doc = SimpleDocTemplate(
@@ -435,18 +508,30 @@ def write_pdf_report() -> Path:
     )
 
     story.append(Paragraph("Final Prediction Pipeline", styles["Heading2"]))
-    _add_paragraph(
-        story,
-        PENDING_SUBMISSION_SENTENCE
-        if not test_data_available()
-        else "Official test data is available, so final CSV generation can be run.",
-        styles["BodyText"],
-    )
-    _add_paragraph(
-        story,
-        "No fake submission CSV is generated. When official test images and masks are available, the final pipeline writes exactly ID and bug type columns for IDs 251-347.",
-        styles["BodyText"],
-    )
+    if test_available and submission_summary.get("valid"):
+        _add_paragraph(
+            story,
+            f"The official test images and masks for IDs 251-347 were released and processed. The final {final_recommended_model} model was applied to 97 test samples. results/submission.csv was generated with exactly two columns: ID and bug type.",
+            styles["BodyText"],
+        )
+        _add_paragraph(
+            story,
+            f"The CSV was validated for 97 rows, IDs 251-347, no duplicate IDs, no missing predictions, and valid bug type labels. Prediction distribution: {submission_summary.get('distribution', {})}. No test accuracy is reported because test labels are unavailable.",
+            styles["BodyText"],
+        )
+    else:
+        _add_paragraph(
+            story,
+            PENDING_SUBMISSION_SENTENCE
+            if not test_available
+            else f"Submission status: {submission_summary.get('error', 'not generated')}.",
+            styles["BodyText"],
+        )
+        _add_paragraph(
+            story,
+            "No fake submission CSV is generated. When official test images and masks are available, the final pipeline writes exactly ID and bug type columns for IDs 251-347.",
+            styles["BodyText"],
+        )
 
     story.append(PageBreak())
     story.append(Paragraph("Generated Figures", styles["Heading2"]))
@@ -469,7 +554,7 @@ def write_pdf_report() -> Path:
     story.append(Paragraph("Reproducibility", styles["Heading2"]))
     _add_paragraph(
         story,
-        "Run: python3 -m src.data_loader --validate --split train; python3 -m src.build_features --split train; python3 -m src.train_models; python3 -m src.clustering; python3 -m src.visualize; python3 -m src.make_report. Do not run final prediction until official test images and masks for IDs 251-347 are available.",
+        "Run: python3 -m src.data_loader --validate --split train; python3 -m src.build_features --split train; python3 -m src.train_models; python3 -m src.clustering; python3 -m src.visualize; python3 -m src.make_report; python3 -m src.data_loader --validate --split test; python3 -m src.build_features --split test; python3 -m src.predict; python3 -m src.validate_submission results/submission.csv. Test data is not used for model selection or hyperparameter tuning.",
         styles["BodyText"],
     )
 
